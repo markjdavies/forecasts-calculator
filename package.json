@@ -1,0 +1,35 @@
+{
+  "name": "forecasts-calculator",
+  "version": "1.0.0",
+  "description": "Calculator utilities for Lard's Forecasts.",
+  "main": "src/index.ts",
+  "scripts": {
+    "lint": "./node_modules/.bin/tslint '**/*.ts'",
+    "lint:fix": "./node_modules/.bin/tslint --fix '**/*.ts'",
+    "transpile": "./node_modules/.bin/tsc -p .",
+    "build": "npm -s run lint && npm -s run transpile",
+    "test:unit": "node_modules/.bin/mocha",
+    "test": "npm run build && npm -s run test:unit"
+  },
+  "keywords": [
+    "mocha",
+    "typescript",
+    "tdd"
+  ],
+  "author": "Mark Davies",
+  "license": "MIT",
+  "dependencies": {
+    "@types/chai": "^4.2.2",
+    "@types/mocha": "^5.2.7",
+    "@types/sinon": "^7.0.13",
+    "@types/sinon-chai": "^3.2.3",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0",
+    "sinon": "^7.4.2",
+    "sinon-chai": "^3.3.0",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.20.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.6.3"
+  }
+}

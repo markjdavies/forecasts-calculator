@@ -1,0 +1,12 @@
+node_modules/
+.vscode/
+npm-debug.log
+*.js
+!test/mocha-globals.js
+*.map
+
+# Exclude all definition files..
+*.d.ts
+
+# Except for types.d.ts
+!types.d.ts
