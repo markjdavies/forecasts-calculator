@@ -4,7 +4,7 @@ import { calculatePredictionPoints } from "./PredictionCalculator";
 import { PlayerScorecard } from "./Entities/PlayerScorecard";
 import { PredictionPoints } from "./Entities/PredictionPoints";
 
-export const CalculatePlayerMatchPoints = (predictions: PlayerPrediction[], results: FootballScore[]): PlayerScorecard => {
+export const calculatePlayerMatchPoints = (predictions: PlayerPrediction[], results: FootballScore[]): PlayerScorecard => {
     return predictions.reduce((scorecard: PlayerScorecard, prediction: PlayerPrediction) => {
         const predictionPoints = calculatePredictionPoints(prediction, results.find(r => r.matchId === prediction.matchId));
         scorecard.totalScore = scorecard.totalScore + predictionPoints;
