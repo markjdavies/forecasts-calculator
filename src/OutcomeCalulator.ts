@@ -1,14 +1,14 @@
-import { Outcome } from "./Entities/Outcome";
+import { Outcome } from './Entities/Outcome';
 
 export const determineOutcome = (home: number, away: number): Outcome => {
-    if (home == away) {
+    if (home === away) {
         return Outcome.Draw;
     }
     else if (home > away) {
         return Outcome.HomeWin;
     }
     else if (away > home) {
-        return Outcome.HomeWin;
+        return Outcome.AwayWin;
     }
     throw Error(`Could not determine outcome of ${home} v ${away}`);
 }
