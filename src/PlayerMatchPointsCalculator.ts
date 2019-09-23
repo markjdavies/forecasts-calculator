@@ -21,6 +21,11 @@ export const calculatePlayerMatchPoints = (predictions: PlayerPrediction[], resu
 
         return scorecard;
     },
-    new PlayerScorecard()
+    {
+        predictions,
+        totalScore: 0,
+        correctScores: 0,
+        turtus: 0
+    }
     );
 }
