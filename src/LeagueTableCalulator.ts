@@ -34,18 +34,32 @@ export const buildTeamFormRow = (teamId: number, teamName: string, events: Leagu
     return buildTeamRow(teamId, teamName, events.slice(formLength * -1));
 }
 
-export const buildLeagueTable = (teamHistories: TeamLeagueHistoryEvent[]): TeamLeagueHistoryEvent[] => {
-    return [];
+export const sortLeagueTable = (teamHistories: TeamLeagueHistoryEvent[]): TeamLeagueHistoryEvent[] => {
+    return teamHistories
+        .sort((team1, team2) => team2.turtuses - team1.turtuses)
+        .sort((team1, team2) => team1.pointsAgainst - team2.pointsAgainst)
+        .sort((team1, team2) => team2.correctScores - team1.correctScores)
+        .sort((team1, team2) => team2.pointsFor - team1.pointsFor)
+        .sort((team1, team2) => team2.leaguePoints - team1.leaguePoints);
 }
 
-const groupByTeam = (teamHistories: TeamLeagueHistoryEvent[]) => {
-    const groupedTeamHistories = teamHistories.reduce((groupedHistories, teamHistoryEvent: TeamLeagueHistoryEvent) => {
-        const team = teamHistoryEvent.teamId;
-        if (!groupedHistories[team]) {
-            groupedHistories[team] = [];
+export const groupByTeam = (teamHistories: TeamLeagueHistoryEvent[]): TeamLeagueHistoryEvent[] => {
+    return teamHistories.reduce((groupedHistories: TeamLeagueHistoryEvent[], teamHistoryEvent: TeamLeagueHistoryEvent) => {
+        const team = groupedHistories.find(t=> t.teamId === teamHistoryEvent.teamId);
+        if (team) {
+            team.correctScores += teamHistoryEvent.correctScores;
+            team.drawn += teamHistoryEvent.drawn;
+            team.leaguePoints += teamHistoryEvent.leaguePoints;
+            team.lost += teamHistoryEvent.lost;
+            team.played += teamHistoryEvent.played;
+            team.pointsAgainst += teamHistoryEvent.pointsAgainst;
+            team.pointsFor += teamHistoryEvent.pointsFor;
+            team.turtuses += teamHistoryEvent.turtuses;
+            team.won += teamHistoryEvent.won;
+        } else {
+            groupedHistories.push(teamHistoryEvent);
         }
-        groupedHistories[team].push(teamHistoryEvent);
         return groupedHistories;
-    }, {});
+    }, []);
 
 }

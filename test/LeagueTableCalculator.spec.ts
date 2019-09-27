@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import { LeagueHistoryEvent } from "../src/Entities/LeagueHistoryEvent";
-import { buildTeamRow, buildTeamFormRow, buildLeagueTable } from '../src/LeagueTableCalulator';
+import { buildTeamRow, buildTeamFormRow, sortLeagueTable, groupByTeam } from '../src/LeagueTableCalulator';
 
 const bigWin: LeagueHistoryEvent = {
     played: 1,
@@ -50,7 +50,8 @@ const narrowDefeat: LeagueHistoryEvent = {
     leaguePoints: 0
 }
 
-const buildMockLeagueRow = (teamId: number, teamName: string, leaguePoints: number, pointsFor: number, correctScores: number, pointsAgainst: number, turtuses: number) => {
+const buildMockLeagueRow = (teamId: number, teamName: string, leaguePoints: number, pointsFor: number, correctScores: number, pointsAgainst: number, turtuses: number,
+    played?: number, won?: number, drawn?: number, lost?: number) => {
     return {
         teamId,
         teamName,
@@ -59,10 +60,10 @@ const buildMockLeagueRow = (teamId: number, teamName: string, leaguePoints: numb
         correctScores,
         pointsAgainst,
         turtuses,
-        played: null,
-        won: null,
-        drawn: null,
-        lost: null
+        played,
+        won,
+        drawn,
+        lost
     }
 }
 
@@ -98,8 +99,8 @@ describe('LeagueTableCalculator', () => {
             const teamName = 'teamName';
 
             const row = buildTeamFormRow(
-                teamId, 
-                teamName, 
+                teamId,
+                teamName,
                 [bigWin, narrowWin, draw, narrowDefeat],
                 3
             );
@@ -118,11 +119,48 @@ describe('LeagueTableCalculator', () => {
         })
     })
 
-    describe('Build League Table', () => {
+    describe('Group by team', () => {
+        it('should aggregate a team\'s history rows', () => {
+            const rows = groupByTeam([
+                buildMockLeagueRow(1, 'Team1', 1, 2, 3, 4, 5, 6, 7, 8, 9),
+                buildMockLeagueRow(2, 'Team2', 10, 20, 30, 40, 50, 60, 70, 80, 90),
+                buildMockLeagueRow(1, 'Team1', 5, 5, 5, 5, 5, 5, 5, 5, 5),
+                buildMockLeagueRow(2, 'Team2', 6, 6, 6, 6, 6, 6, 6, 6, 6)
+            ]);
+
+            expect(rows.length).to.equal(2);
+
+            expect(rows[0].teamId).to.equal(1);
+            expect(rows[0].teamName).to.equal('Team1');
+            expect(rows[0].leaguePoints).to.equal(6);
+            expect(rows[0].pointsFor).to.equal(7);
+            expect(rows[0].correctScores).to.equal(8);
+            expect(rows[0].pointsAgainst).to.equal(9);
+            expect(rows[0].turtuses).to.equal(10);
+            expect(rows[0].played).to.equal(11);
+            expect(rows[0].won).to.equal(12);
+            expect(rows[0].drawn).to.equal(13);
+            expect(rows[0].lost).to.equal(14);
+
+            expect(rows[1].teamId).to.equal(2);
+            expect(rows[1].teamName).to.equal('Team2');
+            expect(rows[1].leaguePoints).to.equal(16);
+            expect(rows[1].pointsFor).to.equal(26);
+            expect(rows[1].correctScores).to.equal(36);
+            expect(rows[1].pointsAgainst).to.equal(46);
+            expect(rows[1].turtuses).to.equal(56);
+            expect(rows[1].played).to.equal(66);
+            expect(rows[1].won).to.equal(76);
+            expect(rows[1].drawn).to.equal(86);
+            expect(rows[1].lost).to.equal(96);
+        })
+    })
+
+    describe('Sort League Table', () => {
 
         it('should order by Pts, F, CS, GD, turtus', () => {
 
-            const table = buildLeagueTable([
+            const table = sortLeagueTable([
                 buildMockLeagueRow(1, 'Sixth', 10, 65, 8, 2, 2),
                 buildMockLeagueRow(2, 'Fifth', 10, 65, 8, 2, 3),
                 buildMockLeagueRow(3, 'First', 11, 65, 8, 2, 2),
@@ -131,7 +169,7 @@ describe('LeagueTableCalculator', () => {
                 buildMockLeagueRow(6, 'Third', 10, 65, 9, 2, 2),
                 buildMockLeagueRow(7, 'Second', 10, 66, 8, 2, 2),
             ]);
-            
+
             expect(table[0].teamName).to.equal('First');
             expect(table[1].teamName).to.equal('Second');
             expect(table[2].teamName).to.equal('Third');
