@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/markjdavies/forecasts-calculator.svg?branch=master)](https://travis-ci.org/markjdavies/forecasts-calculator)
 # forecasts-calculator
 Calculator library for Lard's Forecasts
 
